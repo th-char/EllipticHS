@@ -37,3 +37,6 @@ mult ec p n
     p'      = mult ec p n'
     (n', r) = divMod n 2
     p''     = p' >>= double ec
+
+discriminant :: EC -> Integer
+discriminant (EC a b _) = 4 * a * a * a + 27 * b * b
