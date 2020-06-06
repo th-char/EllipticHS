@@ -1,11 +1,16 @@
 module Lenstra where
 
+import Control.Monad
+import Data.Maybe
+
+import Debug.Trace
+
 import EllipticCurve
 
 lenstras :: Integer -> Integer -> Maybe Integer
 lenstras n b
   | d > 1     = Just d
-  | otherwise = asum $ map lenstras' points_curves
+  | otherwise = listToMaybe $ mapMaybe lenstras' points_curves
   where
     d = gcd 6 n
     -- Check n is not perfect power.
@@ -21,9 +26,10 @@ lenstras n b
     lenstras' (point, curve)
       | d == n    = Nothing
       | d > 1     = Just d
-      | otherwise = case result of Left d' | d' < n -> Just d'
-                                                  _ -> Nothing
+      | otherwise = case result of 
+                      Left d' | d' < n -> Just d'
+                      _                -> Nothing
       where
         d      = gcd (discriminant curve) n
-	result = foldM (mult curve) point [1..b]
+        result = foldM (mult curve) point [1..b]
 

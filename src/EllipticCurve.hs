@@ -2,6 +2,9 @@ module EllipticCurve where
 
 import Arithmetic
 
+import Debug.Trace
+import Text.Printf
+
 data ECPoint = ECPoint Integer Integer 
   deriving Show
 
@@ -13,7 +16,7 @@ add (EC _ _ n) (ECPoint x y) (ECPoint x' y')
   | d == 1    = Right $ ECPoint x'' y''
   | otherwise = Left d
   where
-    (z, d) = invGCD (x' - x) n
+    (z, d) = invGCD ((x' - x) `mod` n) n
     λ      = ((y' - y) * z)      `mod` n
     x''    = (λ * λ - x - x')    `mod` n
     y''    = (λ * (x - x'') - y) `mod` n
@@ -23,12 +26,12 @@ double (EC a _ n) (ECPoint x y)
   | d == 1    = Right $ ECPoint x'' y''
   | otherwise = Left d
   where
-    (z, d) = invGCD (2 * y) n
+    (z, d) = invGCD ((2 * y) `mod` n) n
     λ      = ((3 * x * x + a) * z) `mod` n
     x''    = (λ * λ - 2 * x )      `mod` n
     y''    = (λ * (x - x'') - y)   `mod` n
 
-mult :: EC -> ECPoint -> Int -> Either Integer ECPoint 
+mult :: EC -> ECPoint -> Integer -> Either Integer ECPoint 
 mult ec p n 
   | n == 1 = Right p
   | r == 0 = p''
