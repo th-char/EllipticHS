@@ -17,8 +17,8 @@ lenstras n b
 
     points_curves :: [(ECPoint, EC)]
     points_curves = [ (ECPoint x y, EC a ((y * y - x * x * x - a * x) `mod` n) n)
-                    | x <- [1..(n-1)]
-                    , y <- [1..(n-1)]
+                    | x <- [0..(n-1)]
+                    , y <- [0..(n-1)]
                     , a <- [1..(n-1)]
                     ]                                                              
     

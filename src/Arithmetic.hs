@@ -1,7 +1,7 @@
 module Arithmetic where
 
 -- modPow x y m == x^y mod m
-modPow :: Integral a => a -> a -> a -> a
+modPow :: Integer -> Integer -> Integer -> Integer
 modPow _ _ 0 = error "you fool"
 modPow x 0 _ = 1
 modPow x y m 
@@ -13,7 +13,7 @@ modPow x y m
 
 -- given a and b, returns 
 -- (a^(-1) mod b, gcd a b)
-invGCD :: Integral a => a -> a -> (a, a) 
+invGCD :: Integer -> Integer -> (Integer, Integer)
 invGCD a b 
   = invGCD' 0 b 1 a 
   where 
