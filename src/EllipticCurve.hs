@@ -43,3 +43,4 @@ mult ec p n
 
 discriminant :: EC -> Integer
 discriminant (EC a b _) = 4 * a * a * a + 27 * b * b
+--((((4 * a  `mod` n) * a `mod` n) * a `mod` n) + ((27 * b  `mod` n) * b `mod` n)) `mod` n
