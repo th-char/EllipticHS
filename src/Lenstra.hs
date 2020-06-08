@@ -1,29 +1,41 @@
 module Lenstra where
 
-import           Control.Monad
-import           Data.Maybe
-import qualified Data.Euclidean as E
-import           System.Random
+import Control.Monad
+import Data.Maybe
+import System.Random
+import Control.Applicative
 
 import EllipticCurve
 
-lenstras :: Integer -> Integer -> Maybe Integer
-lenstras n b
-  | d > 1     = Just d
-  | otherwise = listToMaybe $ mapMaybe lenstras' points_curves
-  where
-    d = gcd 6 n
-    -- Check n is not perfect power.
+type LenstraSample = (ECPoint, EC)
 
-    points_curves :: [(ECPoint, EC)]
-    points_curves = take 1000000 $ genPointsCurves (mkStdGen 42)
+runLenstra :: Integer -> Maybe Integer 
+runLenstra n = foldr (<|>) Nothing [ lenstras n firstCurves  2000 
+                                   , lenstras n secondCurves 11000
+                                   , lenstras n thirdCurves  50000
+                                   ]
+  where 
+    (firstCurves,  cs)  = splitAt 25  points_curves
+    (secondCurves, cs') = splitAt 90  cs
+    (thirdCurves,  _)   = splitAt 300 cs'
+
+    points_curves :: [LenstraSample]
+    points_curves = genPointsCurves (mkStdGen 42)
     
-    genPointsCurves :: RandomGen g => g -> [(ECPoint, EC)]
+    genPointsCurves :: RandomGen g => g -> [LenstraSample]
     genPointsCurves g = (ECPoint x y, EC a ((y * y - x * x * x - a * x) `mod` n) n) : genPointsCurves g'''
       where 
         (x, g')   = randomR (1, n - 1) g 
         (y, g'')  = randomR (1, n - 1) g'
         (a, g''') = randomR (1, n - 1) g''
+
+lenstras ::  Integer -> [LenstraSample] -> Integer -> Maybe Integer
+lenstras n cs b
+  | d > 1     = Just d
+  | otherwise = listToMaybe $ mapMaybe lenstras' cs
+  where
+    d = gcd 6 n
+    -- Check n is not perfect power.
 
     lenstras' :: (ECPoint, EC) -> Maybe Integer
     lenstras' (point, curve)
@@ -35,16 +47,3 @@ lenstras n b
       where
         d      = gcd (discriminant curve) n
         result = foldM (mult curve) point [1..b]
-
-{-- 
-    lenstras' :: (ECPoint, EC) -> Maybe Integer
-    lenstras' (point, curve)
-      | δ `mod` n == 0 = Nothing
-      | E.coprime δ n  = case result of 
-                           Left d' | d' < n -> Just d'
-                           _                -> Nothing
-      | otherwise      = Just $ E.gcd δ n
-      where
-        δ      = discriminant curve
-        result = foldM (mult curve) point [1..b]
---}
