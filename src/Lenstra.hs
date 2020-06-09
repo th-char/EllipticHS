@@ -4,16 +4,16 @@ import Control.Monad
 import Data.Maybe
 import System.Random
 import Control.Applicative
-import Control.Parallel.Strategies
+import Debug.Trace
 
 import EllipticCurve
 
 type LenstraSample = (ECPoint, EC)
 
 runLenstra :: Integer -> Maybe Integer 
-runLenstra n = foldr (<|>) Nothing [ lenstras n firstCurves  2000 
-                                   , lenstras n secondCurves 11000
-                                   , lenstras n thirdCurves  50000
+runLenstra n = foldr (<|>) Nothing [ trace "1" $ lenstras n firstCurves  2000 
+                                   , trace "2" $ lenstras n secondCurves 11000
+                                   , trace "3" $ lenstras n thirdCurves  50000
                                    ]
   where 
     (firstCurves,  cs)  = splitAt 25  points_curves
