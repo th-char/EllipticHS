@@ -11,9 +11,9 @@ import EllipticCurve
 type LenstraSample = (ECPoint, EC)
 
 runLenstra :: Integer -> Maybe Integer 
-runLenstra n = foldr (<|>) Nothing [ trace "1" $ lenstras n firstCurves  2000 
-                                   , trace "2" $ lenstras n secondCurves 11000
-                                   , trace "3" $ lenstras n thirdCurves  50000
+runLenstra n = foldr (<|>) Nothing [ lenstras n firstCurves  1000 
+                                   , lenstras n secondCurves 4000
+                                   , lenstras n thirdCurves  10000
                                    ]
   where 
     (firstCurves,  cs)  = splitAt 25  points_curves
