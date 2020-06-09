@@ -4,6 +4,7 @@ import Control.Monad
 import Data.Maybe
 import System.Random
 import Control.Applicative
+import Control.Parallel.Strategies
 
 import EllipticCurve
 
