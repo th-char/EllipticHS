@@ -13,8 +13,8 @@ import Criterion.Types
 import Lenstra
 import Pollards
 
-settings = defaultConfig { resamples = 1000
-                         , timeLimit = 150
+settings = defaultConfig { resamples = 5
+                         , timeLimit = 5
                          }
 
 main = defaultMainWith settings  [
