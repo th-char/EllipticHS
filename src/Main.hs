@@ -4,6 +4,7 @@ import Data.Time.Clock
 import System.IO
 import Text.Printf
 import Data.Maybe
+import System.Random
 
 import Criterion.Main.Options
 import Criterion.Main
@@ -17,20 +18,43 @@ settings = defaultConfig { resamples = 1000
                          }
 
 main = defaultMainWith settings  [
-             bench "Lenstra : 23131 * 97441"                              $ nf runLenstra 2253907771
-           , bench "Lenstra : 3459853037 * 9853235461"                       $ nf runLenstra 34090746634016945057
-           , bench "Lenstra : 2345834957 * 934589353273007"                  $ nf runLenstra 2192392375347842185105699
-           , bench "Lenstra : 234509283489427 * 938942893412861"                  $ nf runLenstra 220190825171739459583039320647
-           , bench "Lenstra : 52635022169628958833592981554606658319"                  $ nf runLenstra 52635022169628958833592981554606658319
-           , bench "Lenstra : 1579057808224947489159455409497076163663656780411374497" $ nf runLenstra 1579057808224947489159455409497076163663656780411374497
-           , bench "Pollards: 23131 * 97441"                              $ nf (pollards 2253907771)                                              10000000   
-           , bench "Pollards: 3459853037 * 9853235461"                       $ nf (pollards 34090746634016945057)                                    10000000  
-           , bench "Pollards: 2345834957 * 934589353273007"                  $ nf (pollards 2192392375347842185105699)                               10000000
-           , bench "Pollards: 234509283489427 * 938942893412861"                  $ nf (pollards 220190825171739459583039320647)                          10000000
-           , bench "Pollards: 52635022169628958833592981554606658319"                  $ nf (pollards 52635022169628958833592981554606658319)                  10000000
-           , bench "Pollards: 1579057808224947489159455409497076163663656780411374497" $ nf (pollards 1579057808224947489159455409497076163663656780411374497) 10000000
+             bench "Lenstra1 : 23131 * 97441"                                           $ nf testLenstra1 2253907771
+           , bench "Lenstra2 : 23131 * 97441"                                           $ nf testLenstra2 2253907771
+           , bench "Lenstra3 : 23131 * 97441"                                           $ nf testLenstra3 2253907771
+
+           , bench "Lenstra1 : 3459853037 * 9853235461"                                 $ nf testLenstra1 34090746634016945057
+           , bench "Lenstra2 : 3459853037 * 9853235461"                                 $ nf testLenstra2 34090746634016945057
+           , bench "Lenstra3 : 3459853037 * 9853235461"                                 $ nf testLenstra3 34090746634016945057
+
+           , bench "Lenstra1 : 2345834957 * 934589353273007"                            $ nf testLenstra1 2192392375347842185105699
+           , bench "Lenstra2 : 2345834957 * 934589353273007"                            $ nf testLenstra2 2192392375347842185105699
+           , bench "Lenstra3 : 2345834957 * 934589353273007"                            $ nf testLenstra3 2192392375347842185105699
+
+           , bench "Lenstra1 : 234509283489427 * 938942893412861"                       $ nf testLenstra1 220190825171739459583039320647
+           , bench "Lenstra2 : 234509283489427 * 938942893412861"                       $ nf testLenstra2 220190825171739459583039320647
+           , bench "Lenstra3 : 234509283489427 * 938942893412861"                       $ nf testLenstra3 220190825171739459583039320647
+
+           , bench "Lenstra1 : 52635022169628958833592981554606658319"                  $ nf testLenstra1 52635022169628958833592981554606658319
+           , bench "Lenstra2 : 52635022169628958833592981554606658319"                  $ nf testLenstra2 52635022169628958833592981554606658319
+           , bench "Lenstra3 : 52635022169628958833592981554606658319"                  $ nf testLenstra3 52635022169628958833592981554606658319
+
+           , bench "Lenstra1 : 1579057808224947489159455409497076163663656780411374497" $ nf testLenstra1 1579057808224947489159455409497076163663656780411374497
+           , bench "Lenstra2 : 1579057808224947489159455409497076163663656780411374497" $ nf testLenstra2 1579057808224947489159455409497076163663656780411374497
+           , bench "Lenstra3 : 1579057808224947489159455409497076163663656780411374497" $ nf testLenstra3 1579057808224947489159455409497076163663656780411374497
+
+           , bench "Pollards: 23131 * 97441"                                            $ nf testPollards 2253907771   
+           , bench "Pollards: 3459853037 * 9853235461"                                  $ nf testPollards 34090746634016945057  
+           , bench "Pollards: 2345834957 * 934589353273007"                             $ nf testPollards 2192392375347842185105699
+           , bench "Pollards: 234509283489427 * 938942893412861"                        $ nf testPollards 220190825171739459583039320647
+           , bench "Pollards: 52635022169628958833592981554606658319"                   $ nf testPollards 52635022169628958833592981554606658319
+           , bench "Pollards: 1579057808224947489159455409497076163663656780411374497"  $ nf testPollards 1579057808224947489159455409497076163663656780411374497
          ] 
-       ]
+  where
+    testPollards = (flip pollards) 100000000 
+    testLenstra1 = runLenstra (mkStdGen 42)
+    testLenstra2 = runLenstra (mkStdGen 25)
+    testLenstra3 = runLenstra (mkStdGen 348726)
+
 
 -- main :: IO ()
 -- main = mapM_ benchFactorisation [ 1333333333333333333333 :: Integer

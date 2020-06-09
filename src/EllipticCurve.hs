@@ -2,7 +2,6 @@ module EllipticCurve where
 
 import Arithmetic
 
-import Debug.Trace
 import Text.Printf
 
 data ECPoint = ECPoint Integer Integer 

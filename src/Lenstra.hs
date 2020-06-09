@@ -4,24 +4,23 @@ import Control.Monad
 import Data.Maybe
 import System.Random
 import Control.Applicative
-import Debug.Trace
 
 import EllipticCurve
 
 type LenstraSample = (ECPoint, EC)
 
-runLenstra :: Integer -> Maybe Integer 
-runLenstra n = foldr (<|>) Nothing [ lenstras n firstCurves  1000 
-                                   , lenstras n secondCurves 4000
-                                   , lenstras n thirdCurves  10000
-                                   ]
+runLenstra :: RandomGen g => g -> Integer -> Maybe Integer 
+runLenstra g n = foldr (<|>) Nothing [ lenstras n firstCurves  2000 
+                                     , lenstras n secondCurves 11000
+                                     , lenstras n thirdCurves  50000
+                                     ]
   where 
-    (firstCurves,  cs)  = splitAt 25  points_curves
-    (secondCurves, cs') = splitAt 90  cs
+    (firstCurves,  cs)  = splitAt 15  points_curves
+    (secondCurves, cs') = splitAt 60  cs
     (thirdCurves,  _)   = splitAt 300 cs'
 
     points_curves :: [LenstraSample]
-    points_curves = genPointsCurves (mkStdGen 42)
+    points_curves = genPointsCurves g
     
     genPointsCurves :: RandomGen g => g -> [LenstraSample]
     genPointsCurves g = (ECPoint x y, EC a ((y * y - x * x * x - a * x) `mod` n) n) : genPointsCurves g'''
