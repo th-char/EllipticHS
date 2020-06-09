@@ -15,8 +15,8 @@ runLenstra g n = foldr (<|>) Nothing [ lenstras n firstCurves  2000
                                      , lenstras n thirdCurves  50000
                                      ]
   where 
-    (firstCurves,  cs)  = splitAt 15  points_curves
-    (secondCurves, cs') = splitAt 60  cs
+    (firstCurves,  cs)  = splitAt 25  points_curves
+    (secondCurves, cs') = splitAt 90  cs
     (thirdCurves,  _)   = splitAt 300 cs'
 
     points_curves :: [LenstraSample]
