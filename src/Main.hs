@@ -103,9 +103,9 @@ benchFactorisation n = do
  
      putStrLn $ "    With Pollards:"
      t <- getCurrentTime
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 70000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 70000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 70000000)
      t' <- getCurrentTime
      putStrLn $ "   Time: " ++ (show $ (diffUTCTime t' t) / 3)
  
