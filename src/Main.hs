@@ -91,7 +91,7 @@ main = mapM_ benchFactorisation tests
             , 34090746634016945057
             , 2192392375347842185105699
             , 408690345942924410509381586819
-            , 232536787234524110836507046779403561
+            , 246128739200473082505371804185843703
             , 52635022169628958833592981554606658319
             , 910860317247739380133408532292256900819
             ]
@@ -104,9 +104,9 @@ benchFactorisation n = do
  
      putStrLn $ "    With Pollards:"
      t <- getCurrentTime
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 100000000)
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 100000000)
-     putStrLn $ "       Result: " ++ (formatResult $ pollards n 100000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
+     putStrLn $ "       Result: " ++ (formatResult $ pollards n 50000000)
      t' <- getCurrentTime
      putStrLn $ "   Time: " ++ (show $ (diffUTCTime t' t) / 3)
  
