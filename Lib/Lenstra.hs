@@ -1,14 +1,17 @@
-module Lenstra where
+module Lib.Lenstra where
 
 import Control.Monad
 import Data.Maybe
 import System.Random
 import Control.Applicative
 
-import EllipticCurve
+import Lib.EllipticCurve
 
 type LenstraSample = (ECPoint, EC)
 
+-- | Try Lenstra's algorithm for a different number of samples on each curve,
+--   the idea is that we should be able to find a one factor quickly on a curve,
+--   but if this fails, then we have to try more samples on a single elliptic curve 
 runLenstra :: RandomGen g => g -> Integer -> Maybe Integer 
 runLenstra g n = foldr (<|>) Nothing [ lenstras n firstCurves  2000 
                                      , lenstras n secondCurves 11000
@@ -23,9 +26,11 @@ runLenstra g n = foldr (<|>) Nothing [ lenstras n firstCurves  2000
     points_curves = genPointsCurves g
     
     genPointsCurves :: RandomGen g => g -> [LenstraSample]
-    genPointsCurves g = (ECPoint x y, EC a ((y * y - x * x * x - a * x) `mod` n) n) : genPointsCurves g'''
+    genPointsCurves g = ( ECPoint x y
+                        , EC a ((y * y - x * x * x - a * x) `mod` n) n) 
+                          : genPointsCurves g'''
       where 
-        (x, g')   = randomR (1, n - 1) g 
+        (x, g')   = randomR (1, n - 1) g
         (y, g'')  = randomR (1, n - 1) g'
         (a, g''') = randomR (1, n - 1) g''
 
@@ -35,9 +40,8 @@ lenstras n cs b
   | otherwise = listToMaybe $ mapMaybe lenstras' cs
   where
     d = gcd 6 n
-    -- Check n is not perfect power.
 
-    lenstras' :: (ECPoint, EC) -> Maybe Integer
+    lenstras' :: LenstraSample -> Maybe Integer
     lenstras' (point, curve)
       | d == n    = Nothing
       | d > 1     = Just d

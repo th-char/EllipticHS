@@ -1,15 +1,18 @@
-module EllipticCurve where 
+module Lib.EllipticCurve where 
 
-import Arithmetic
-
-import Text.Printf
-
-data ECPoint = ECPoint Integer Integer 
-  deriving Show
+import Lib.Arithmetic
 
 type Ring = Integer
-data EC = EC Integer Integer Ring -- EC a b n ==> y^2 = x^3 + ax + b over Z/nZ
 
+data ECPoint = ECPoint Ring Ring 
+  deriving Show
+
+-- | EC a b n ==> y^2 = x^3 + ax + b over Z/nZ
+data EC   = EC Ring Ring Ring 
+
+-- | add two points on an elliptic curve, if the sum of the points 
+--   exists, then return that point, otherwise, return the gcd of 
+--   (x' - x) mod n and n
 add :: EC -> ECPoint -> ECPoint -> Either Integer ECPoint
 add (EC _ _ n) (ECPoint x y) (ECPoint x' y') 
   | d == 1    = Right $ ECPoint x'' y''
@@ -20,6 +23,8 @@ add (EC _ _ n) (ECPoint x y) (ECPoint x' y')
     x''    = (λ * λ - x - x')    `mod` n
     y''    = (λ * (x - x'') - y) `mod` n
 
+-- | given a point P on EC, return 2P if it exists, otherwise,
+--   return the gcd of 2y mod n and n
 double :: EC -> ECPoint -> Either Integer ECPoint 
 double (EC a _ n) (ECPoint x y)
   | d == 1    = Right $ ECPoint x'' y''
@@ -30,6 +35,8 @@ double (EC a _ n) (ECPoint x y)
     x''    = (λ * λ - 2 * x )      `mod` n
     y''    = (λ * (x - x'') - y)   `mod` n
 
+-- | Given a point P on EC, and an integer n, return nP 
+--   if it exists
 mult :: EC -> ECPoint -> Integer -> Either Integer ECPoint 
 mult ec p n 
   | n == 1 = Right p
@@ -42,4 +49,3 @@ mult ec p n
 
 discriminant :: EC -> Integer
 discriminant (EC a b _) = 4 * a * a * a + 27 * b * b
---((((4 * a  `mod` n) * a `mod` n) * a `mod` n) + ((27 * b  `mod` n) * b `mod` n)) `mod` n

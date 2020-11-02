@@ -1,7 +1,8 @@
-module Pollards where
+module Lib.Pollards where
 
-import Arithmetic 
 import Data.Maybe
+
+import Lib.Arithmetic 
 
 pollards :: Integer -> Integer -> Maybe Integer
 pollards n b

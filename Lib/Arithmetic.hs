@@ -1,6 +1,6 @@
-module Arithmetic where
+module Lib.Arithmetic where
 
--- modPow x y m == x^y mod m
+-- | modPow x y m == x^y mod m
 modPow :: Integer -> Integer -> Integer -> Integer
 modPow _ _ 0 = error "you fool"
 modPow x 0 _ = 1
@@ -11,8 +11,7 @@ modPow x y m
     pm = modPow x y' m
     (y', r) = divMod y 2
 
--- given a and b, returns 
--- (a^(-1) mod b, gcd a b)
+-- | given a and b, returns (a^(-1) mod b, gcd a b)
 invGCD :: Integer -> Integer -> (Integer, Integer)
 invGCD a b 
   = invGCD' 0 b 1 a 
